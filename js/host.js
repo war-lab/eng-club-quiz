@@ -38,9 +38,9 @@ function renderJoinQr(url) {
   }
   new QRCode(el, {
     text: url,
-    width: 180,
-    height: 180,
-    colorDark: "#111827",
+    width: 320,
+    height: 320,
+    colorDark: "#000000",
     colorLight: "#ffffff",
     correctLevel: QRCode.CorrectLevel.M
   });
@@ -174,8 +174,11 @@ async function showNextQuestion() {
     const div = document.createElement("div");
     div.className = "choice c" + i;
     div.innerHTML =
-      '<span class="choice-marker">' + ANSWER_MARKERS[i] + '</span>' +
-      '<span class="choice-text">' + escapeHtml(c) + '</span>';
+      '<span class="choice-marker">' +
+        '<span class="marker-num">' + ANSWER_NUMBERS[i] + '</span>' +
+        '<span class="marker-shape">' + ANSWER_SHAPE_SVGS[i] + '</span>' +
+      '</span>' +
+      '<span class="choice-text">' + escapeHtml(stripLeadingCircledNumber(c)) + '</span>';
     div.dataset.idx = i;
     choicesEl.appendChild(div);
   });
@@ -263,7 +266,7 @@ async function revealAnswer(manual) {
     const bar = document.createElement("div");
     bar.className = "dist-bar";
     bar.innerHTML =
-      '<div class="dist-label">' + ["①", "②", "③", "④"][i] + ' (' + counts[i] + ')</div>' +
+      '<div class="dist-label">' + ANSWER_MARKERS[i] + ' (' + counts[i] + ')</div>' +
       '<div class="dist-fill ' + (i === q.correct ? "correct-fill" : "") + '" ' +
       'style="height: ' + Math.max(8, pct) + '%;">' + pct + '%</div>';
     distEl.appendChild(bar);
@@ -282,8 +285,9 @@ async function revealAnswer(manual) {
   const updates = {};
   for (const pid in players) {
     const a = answers[pid];
+    const isCorrect = !!(a && a.choice === q.correct);
     let gained = 0;
-    if (a && a.choice === q.correct) {
+    if (isCorrect) {
       if (scoreMode === "flat") {
         gained = 1000;
       } else {
@@ -297,6 +301,8 @@ async function revealAnswer(manual) {
     // 各プレイヤーごとに「直近の獲得点」を書いておく（参加者画面で表示）
     updates["players/" + pid + "/lastGained"] = gained;
     updates["players/" + pid + "/lastQuestionIndex"] = currentQuestionIndex;
+    // 正解判定は得点に依存させない（速度ボーナス制で 0点正解のケースを救う）
+    updates["players/" + pid + "/lastCorrect"] = isCorrect;
   }
   await db.ref("rooms/" + currentPin).update(updates);
 

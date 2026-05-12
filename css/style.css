@@ -240,16 +240,16 @@ button.danger:hover { background: var(--danger); color: #fff; }
   border: 1px solid var(--border);
   border-top: 3px solid var(--accent);
   border-radius: 6px;
-  padding: 30px;
+  padding: 36px;
   margin: 20px 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 32px;
-  flex-wrap: wrap;
   box-shadow: 0 0 30px rgba(212, 255, 0, 0.1);
 }
-.pin-display-main { text-align: center; flex: 1 1 280px; min-width: 240px; }
+.pin-display-main { text-align: center; }
 .pin-label {
   font-family: var(--display);
   font-size: 16px;
@@ -270,15 +270,15 @@ button.danger:hover { background: var(--danger); color: #fff; }
 .qr-area { text-align: center; }
 .qr-area #qr-code {
   display: inline-block;
-  padding: 10px;
+  padding: 16px;
   background: #ffffff;
-  border-radius: 6px;
+  border-radius: 8px;
   line-height: 0;
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.25);
+  box-shadow: 0 0 28px rgba(0, 255, 136, 0.3);
 }
 .qr-area #qr-code img,
 .qr-area #qr-code canvas { display: block; }
-.qr-hint { color: var(--text-muted); font-size: 12px; margin-top: 8px; letter-spacing: 1px; }
+.qr-hint { color: var(--text-muted); font-size: 14px; margin-top: 12px; letter-spacing: 1px; }
 
 /* ===== 参加者一覧 ===== */
 .player-list {
@@ -314,8 +314,12 @@ button.danger:hover { background: var(--danger); color: #fff; }
 }
 .qindex { color: var(--accent); }
 .qanswered { color: var(--accent-2); font-weight: bold; }
-.qtimer { color: var(--accent); font-weight: bold; }
-.qtimer.danger { color: var(--danger); text-shadow: 0 0 12px rgba(255, 51, 102, 0.7); }
+.qtimer { color: var(--accent); font-weight: bold; transition: transform 0.2s, color 0.2s; transform-origin: right center; }
+.qtimer.danger {
+  color: var(--danger);
+  text-shadow: 0 0 12px rgba(255, 51, 102, 0.7);
+  transform: scale(1.08);
+}
 .qtext {
   font-size: 28px;
   line-height: 1.5;
@@ -345,17 +349,65 @@ button.danger:hover { background: var(--danger); color: #fff; }
   transition: transform 0.12s, opacity 0.2s, box-shadow 0.15s;
   border: 2px solid transparent;
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 120px 1fr;
   gap: 18px;
   align-items: center;
 }
 .choice-marker {
   font-family: var(--display);
   letter-spacing: 1px;
+  text-align: center;
+  padding-right: 14px;
+  border-right: 2px solid rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  line-height: 1;
+}
+.marker-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  border: 0.12em solid currentColor;
+  border-radius: 50%;
+  font-size: 0.95em;
+  line-height: 1;
+  opacity: 0.9;
+}
+.marker-shape {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6em;
+  height: 1.6em;
+  line-height: 0;
+}
+.marker-shape svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 .choice-text {
   line-height: 1.35;
   white-space: pre-wrap;
+}
+.choice.correct::after {
+  content: "CORRECT";
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-family: var(--display);
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: #000;
+  background: var(--accent);
+  padding: 4px 10px;
+  border-radius: 3px;
+  box-shadow: 0 0 18px rgba(212, 255, 0, 0.7);
 }
 .choice.c0 { background: var(--c0); }
 .choice.c1 { background: var(--c1); color: #111; }
@@ -468,9 +520,8 @@ body.host .choice {
   line-height: 1.35;
   padding: 30px;
 }
-body.host .choice-marker {
-  font-size: 1.25em;
-}
+body.host .marker-num { font-size: 1.0em; }
+body.host .marker-shape { width: 1.9em; height: 1.9em; }
 
 /* ===== 参加者画面 ===== */
 .join-choices {
@@ -480,15 +531,21 @@ body.host .choice-marker {
   margin: 20px 0;
 }
 .choice-btn {
-  font-size: 56px;
   font-weight: bold;
   color: #fff;
   border: none;
   border-radius: 12px;
-  padding: 40px 0;
+  padding: 28px 0;
   min-height: 140px;
   transition: transform 0.08s, opacity 0.2s, box-shadow 0.15s;
-  font-family: var(--display);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.choice-btn svg {
+  width: 64px;
+  height: 64px;
+  display: block;
 }
 .choice-btn:active:not(:disabled) { transform: scale(0.95); }
 .choice-btn.c0 { background: var(--c0); box-shadow: 0 0 24px rgba(255, 45, 127, 0.5); }
