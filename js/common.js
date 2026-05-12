@@ -1,5 +1,8 @@
 // 共通ユーティリティ
 
+// 選択肢のマーカー: 番号 + 形状で色覚・投影輝度に頑健にする
+const ANSWER_MARKERS = ["① ◆", "② ●", "③ ▲", "④ ■"];
+
 // 6桁の数字 PIN を生成（先頭 0 あり）
 function generatePin() {
   const n = Math.floor(Math.random() * 1000000);

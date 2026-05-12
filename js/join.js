@@ -13,6 +13,7 @@ let metaListenerRef = null;
 let myScoreListenerRef = null;
 let myChoice = null;
 let mySubmittedQ = -1;
+let latestQuestion = null;     // currentQuestion の最新スナップショット (correct含む)
 
 const $ = (id) => document.getElementById(id);
 
@@ -98,6 +99,7 @@ function startListeningQuestion() {
   questionListenerRef.on("value", (snap) => {
     const q = snap.val();
     if (!q) return;
+    latestQuestion = q;
 
     if (q.phase === "answering") {
       if (q.index !== currentQIndex) {
@@ -185,10 +187,12 @@ async function enterResultPhase() {
   // 正解の choice は currentQuestion に持っていないので、players.lastGained > 0 で判定する
   const isCorrect = (me.lastGained || 0) > 0 && me.lastQuestionIndex === currentQIndex;
 
-  $("my-choice").textContent = myAns ? ["①", "②", "③", "④"][myAns.choice] : "未回答";
-  $("correct-choice").textContent = isCorrect
-    ? (myAns ? ["①", "②", "③", "④"][myAns.choice] : "?")
-    : "（講師画面を確認）";
+  $("my-choice").textContent = myAns ? ANSWER_MARKERS[myAns.choice] : "未回答";
+  // 正解番号は revealed 時に Firebase に書かれた currentQuestion.correct から取得
+  $("correct-choice").textContent =
+    latestQuestion && typeof latestQuestion.correct === "number"
+      ? ANSWER_MARKERS[latestQuestion.correct]
+      : "（講師画面を確認）";
   $("gained-points").textContent = me.lastGained || 0;
   $("my-score").textContent = me.score || 0;
 

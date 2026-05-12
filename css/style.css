@@ -305,13 +305,16 @@ button.danger:hover { background: var(--danger); color: #fff; }
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
   font-size: 22px;
   margin-bottom: 16px;
   font-family: var(--display);
   letter-spacing: 2px;
 }
 .qindex { color: var(--accent); }
-.qtimer { color: var(--accent-2); font-weight: bold; }
+.qanswered { color: var(--accent-2); font-weight: bold; }
+.qtimer { color: var(--accent); font-weight: bold; }
 .qtimer.danger { color: var(--danger); text-shadow: 0 0 12px rgba(255, 51, 102, 0.7); }
 .qtext {
   font-size: 28px;
@@ -341,6 +344,18 @@ button.danger:hover { background: var(--danger); color: #fff; }
   position: relative;
   transition: transform 0.12s, opacity 0.2s, box-shadow 0.15s;
   border: 2px solid transparent;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 18px;
+  align-items: center;
+}
+.choice-marker {
+  font-family: var(--display);
+  letter-spacing: 1px;
+}
+.choice-text {
+  line-height: 1.35;
+  white-space: pre-wrap;
 }
 .choice.c0 { background: var(--c0); }
 .choice.c1 { background: var(--c1); color: #111; }
@@ -434,6 +449,27 @@ button.danger:hover { background: var(--danger); color: #fff; }
 .ranking.final li:nth-child(3) {
   background: linear-gradient(90deg, rgba(255, 153, 0, 0.18), var(--surface));
   border-color: #ff9900;
+}
+
+/* ===== ホスト投影用 (body.host限定で参加者スマホには影響させない) ===== */
+body.host .phase {
+  max-width: 1280px;
+}
+body.host .qheader {
+  font-size: clamp(28px, 3vw, 48px);
+}
+body.host .qtext {
+  font-size: clamp(36px, 4vw, 64px);
+  line-height: 1.35;
+  padding: 32px;
+}
+body.host .choice {
+  font-size: clamp(28px, 2.6vw, 44px);
+  line-height: 1.35;
+  padding: 30px;
+}
+body.host .choice-marker {
+  font-size: 1.25em;
 }
 
 /* ===== 参加者画面 ===== */
