@@ -224,9 +224,6 @@ async function revealAnswer(manual) {
   const q = currentQuizSet.questions[currentQuestionIndex];
   const limitSec = q.timeLimitSec || currentQuizSet.defaultTimeLimitSec || 20;
 
-  // Firebase の phase を revealed に
-  await db.ref("rooms/" + currentPin + "/currentQuestion/phase").set("revealed");
-
   // 回答スナップショット読み込み
   const snap = await db.ref("rooms/" + currentPin + "/answers/" + currentQuestionIndex).get();
   const answers = snap.val() || {};
@@ -290,6 +287,11 @@ async function revealAnswer(manual) {
     updates["players/" + pid + "/lastQuestionIndex"] = currentQuestionIndex;
   }
   await db.ref("rooms/" + currentPin).update(updates);
+
+  // スコア書き込み完了後に phase を revealed に進める
+  // （参加者側は phase === "revealed" を検知して lastGained を読みに行くので、
+  //   先に phase を書くと前問の lastGained が読まれて誤判定になる）
+  await db.ref("rooms/" + currentPin + "/currentQuestion/phase").set("revealed");
 
   // 上位 5 名表示
   const updatedSnap = await db.ref("rooms/" + currentPin + "/players").get();
