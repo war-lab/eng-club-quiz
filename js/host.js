@@ -38,9 +38,9 @@ function renderJoinQr(url) {
   }
   new QRCode(el, {
     text: url,
-    width: 180,
-    height: 180,
-    colorDark: "#111827",
+    width: 320,
+    height: 320,
+    colorDark: "#000000",
     colorLight: "#ffffff",
     correctLevel: QRCode.CorrectLevel.M
   });
@@ -173,7 +173,12 @@ async function showNextQuestion() {
   q.choices.forEach((c, i) => {
     const div = document.createElement("div");
     div.className = "choice c" + i;
-    div.textContent = c;
+    div.innerHTML =
+      '<span class="choice-marker">' +
+        '<span class="marker-num">' + ANSWER_NUMBERS[i] + '</span>' +
+        '<span class="marker-shape">' + ANSWER_SHAPE_SVGS[i] + '</span>' +
+      '</span>' +
+      '<span class="choice-text">' + escapeHtml(stripLeadingCircledNumber(c)) + '</span>';
     div.dataset.idx = i;
     choicesEl.appendChild(div);
   });
@@ -181,21 +186,31 @@ async function showNextQuestion() {
   $("btn-reveal").classList.remove("hidden");
   $("btn-next").classList.add("hidden");
 
-  // Firebase に出題
+  // 回答済み人数カウンタ初期化
+  const playersSnap = await db.ref("rooms/" + currentPin + "/players").get();
+  const players = playersSnap.val() || {};
+  $("total-players").textContent = Object.keys(players).length;
+  $("answered-count").textContent = "0";
+
+  // Firebase に出題 (前問の correct を残さないため明示的に上書き)
   await db.ref("rooms/" + currentPin + "/currentQuestion").set({
     index: currentQuestionIndex,
     startedAt: startedAt,
     deadline: deadline,
-    phase: "answering"
+    phase: "answering",
+    correct: null
   });
 
   // タイマー開始（締切で自動的に reveal）
   startTimer(deadline);
 
-  // 回答監視（既存があれば外す）
+  // 回答監視 (回答中: 司会者向けに「回答済み n / m」をリアルタイム更新)
   if (answersListenerRef) answersListenerRef.off();
   answersListenerRef = db.ref("rooms/" + currentPin + "/answers/" + currentQuestionIndex);
-  // 監視自体は revealAnswer 時にスナップショット読みするのでここでは listener 不要
+  answersListenerRef.on("value", (snap) => {
+    const answers = snap.val() || {};
+    $("answered-count").textContent = Object.keys(answers).length;
+  });
 }
 
 function startTimer(deadlineMs) {
@@ -224,9 +239,6 @@ async function revealAnswer(manual) {
   const q = currentQuizSet.questions[currentQuestionIndex];
   const limitSec = q.timeLimitSec || currentQuizSet.defaultTimeLimitSec || 20;
 
-  // Firebase の phase を revealed に
-  await db.ref("rooms/" + currentPin + "/currentQuestion/phase").set("revealed");
-
   // 回答スナップショット読み込み
   const snap = await db.ref("rooms/" + currentPin + "/answers/" + currentQuestionIndex).get();
   const answers = snap.val() || {};
@@ -254,7 +266,7 @@ async function revealAnswer(manual) {
     const bar = document.createElement("div");
     bar.className = "dist-bar";
     bar.innerHTML =
-      '<div class="dist-label">' + ["①", "②", "③", "④"][i] + ' (' + counts[i] + ')</div>' +
+      '<div class="dist-label">' + ANSWER_MARKERS[i] + ' (' + counts[i] + ')</div>' +
       '<div class="dist-fill ' + (i === q.correct ? "correct-fill" : "") + '" ' +
       'style="height: ' + Math.max(8, pct) + '%;">' + pct + '%</div>';
     distEl.appendChild(bar);
@@ -273,8 +285,9 @@ async function revealAnswer(manual) {
   const updates = {};
   for (const pid in players) {
     const a = answers[pid];
+    const isCorrect = !!(a && a.choice === q.correct);
     let gained = 0;
-    if (a && a.choice === q.correct) {
+    if (isCorrect) {
       if (scoreMode === "flat") {
         gained = 1000;
       } else {
@@ -288,8 +301,19 @@ async function revealAnswer(manual) {
     // 各プレイヤーごとに「直近の獲得点」を書いておく（参加者画面で表示）
     updates["players/" + pid + "/lastGained"] = gained;
     updates["players/" + pid + "/lastQuestionIndex"] = currentQuestionIndex;
+    // 正解判定は得点に依存させない（速度ボーナス制で 0点正解のケースを救う）
+    updates["players/" + pid + "/lastCorrect"] = isCorrect;
   }
   await db.ref("rooms/" + currentPin).update(updates);
+
+  // スコア書き込み完了後に phase を revealed に進める
+  // （参加者側は phase === "revealed" を検知して lastGained を読みに行くので、
+  //   先に phase を書くと前問の lastGained が読まれて誤判定になる）
+  // 同時に correct を書き込んで、参加者画面で正解番号を表示できるようにする
+  await db.ref("rooms/" + currentPin + "/currentQuestion").update({
+    phase: "revealed",
+    correct: q.correct
+  });
 
   // 上位 5 名表示
   const updatedSnap = await db.ref("rooms/" + currentPin + "/players").get();

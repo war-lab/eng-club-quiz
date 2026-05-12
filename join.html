@@ -8,6 +8,11 @@
 </head>
 <body class="join">
 
+  <header class="topbar">
+    <img src="images/BEB.png" alt="BEB" class="logo">
+    <span class="brand">ENG-CLUB-QUIZ <span class="hi">/ PLAYER</span></span>
+  </header>
+
   <!-- [1] 起動：PIN + ニックネーム -->
   <section id="phase-entry" class="phase">
     <h1>参加する</h1>
@@ -40,12 +45,20 @@
       <div class="qindex">Q<span id="j-q-index">1</span></div>
       <div class="qtimer">残り <span id="j-q-timer">--</span> 秒</div>
     </div>
-    <p class="answer-instruction">講師画面の選択肢を見て、対応する色をタップ</p>
+    <p class="answer-instruction">講師画面と同じ記号をタップ</p>
     <div class="join-choices">
-      <button class="choice-btn c0" data-choice="0">①</button>
-      <button class="choice-btn c1" data-choice="1">②</button>
-      <button class="choice-btn c2" data-choice="2">③</button>
-      <button class="choice-btn c3" data-choice="3">④</button>
+      <button class="choice-btn c0" data-choice="0" aria-label="選択肢1">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="12,2 22,12 12,22 2,12" fill="currentColor"/></svg>
+      </button>
+      <button class="choice-btn c1" data-choice="1" aria-label="選択肢2">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/></svg>
+      </button>
+      <button class="choice-btn c2" data-choice="2" aria-label="選択肢3">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="12,2.5 22,21.5 2,21.5" fill="currentColor"/></svg>
+      </button>
+      <button class="choice-btn c3" data-choice="3" aria-label="選択肢4">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" fill="currentColor"/></svg>
+      </button>
     </div>
     <p id="answer-state" class="answer-state"></p>
   </section>

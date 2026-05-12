@@ -13,6 +13,7 @@ let metaListenerRef = null;
 let myScoreListenerRef = null;
 let myChoice = null;
 let mySubmittedQ = -1;
+let latestQuestion = null;     // currentQuestion の最新スナップショット (correct含む)
 
 const $ = (id) => document.getElementById(id);
 
@@ -98,6 +99,7 @@ function startListeningQuestion() {
   questionListenerRef.on("value", (snap) => {
     const q = snap.val();
     if (!q) return;
+    latestQuestion = q;
 
     if (q.phase === "answering") {
       if (q.index !== currentQIndex) {
@@ -180,26 +182,28 @@ async function enterResultPhase() {
   const me = meSnap.val() || { score: 0, lastGained: 0 };
   const myAns = ansSnap.val();
 
-  // 正解判定（参加者画面に「正解の選択肢インデックス」を出していいかは設計上微妙だが、
-  //   問題文・選択肢ラベルは出さない設計を保ちつつ、index だけ番号で表示する）
-  // 正解の choice は currentQuestion に持っていないので、players.lastGained > 0 で判定する
-  const isCorrect = (me.lastGained || 0) > 0 && me.lastQuestionIndex === currentQIndex;
+  // 正解判定は得点ではなく lastCorrect を見る
+  //   (速度ボーナス制でギリギリ正解→0点になったケースを誤って不正解扱いしないため)
+  const isCorrect = me.lastCorrect === true && me.lastQuestionIndex === currentQIndex;
 
-  $("my-choice").textContent = myAns ? ["①", "②", "③", "④"][myAns.choice] : "未回答";
-  $("correct-choice").textContent = isCorrect
-    ? (myAns ? ["①", "②", "③", "④"][myAns.choice] : "?")
-    : "（講師画面を確認）";
+  $("my-choice").textContent = myAns ? ANSWER_MARKERS[myAns.choice] : "未回答";
+  // 正解番号は revealed 時に Firebase に書かれた currentQuestion.correct から取得
+  $("correct-choice").textContent =
+    latestQuestion && typeof latestQuestion.correct === "number"
+      ? ANSWER_MARKERS[latestQuestion.correct]
+      : "（講師画面を確認）";
   $("gained-points").textContent = me.lastGained || 0;
   $("my-score").textContent = me.score || 0;
 
   $("result-headline").textContent = isCorrect ? "正解！" : (myAns ? "残念…" : "未回答");
   $("result-headline").className = isCorrect ? "correct" : "wrong";
 
-  // 順位算出
+  // 順位算出 (同名対策で playerId ベース)
   const playersSnap = await db.ref("rooms/" + currentPin + "/players").get();
   const players = playersSnap.val() || {};
-  const ranked = Object.values(players).sort((a, b) => (b.score || 0) - (a.score || 0));
-  const myIdx = ranked.findIndex((p) => p.nickname === me.nickname);
+  const ranked = Object.entries(players)
+    .sort(([, a], [, b]) => (b.score || 0) - (a.score || 0));
+  const myIdx = ranked.findIndex(([pid]) => pid === playerId);
   $("my-rank").textContent = myIdx >= 0 ? myIdx + 1 : "-";
 
   showPhase("phase-result");
@@ -212,8 +216,9 @@ async function onFinished() {
   const me = meSnap.val() || { score: 0 };
   const playersSnap = await db.ref("rooms/" + currentPin + "/players").get();
   const players = playersSnap.val() || {};
-  const ranked = Object.values(players).sort((a, b) => (b.score || 0) - (a.score || 0));
-  const myIdx = ranked.findIndex((p) => p.nickname === me.nickname);
+  const ranked = Object.entries(players)
+    .sort(([, a], [, b]) => (b.score || 0) - (a.score || 0));
+  const myIdx = ranked.findIndex(([pid]) => pid === playerId);
 
   $("final-score").textContent = me.score || 0;
   $("final-rank").textContent = myIdx >= 0 ? myIdx + 1 : "-";
