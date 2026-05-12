@@ -57,15 +57,24 @@
 
 ```javascript
 // ここに firebaseConfig を貼り付け
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "",
-  authDomain: "",
-  databaseURL: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: ""
+  apiKey: "AIzaSyDvhtZcPaQPpInT3kZsJuBGB7u-02X5XAo",
+  authDomain: "eng-club-quiz.firebaseapp.com",
+  databaseURL: "https://eng-club-quiz-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "eng-club-quiz",
+  storageBucket: "eng-club-quiz.firebasestorage.app",
+  messagingSenderId: "1002499100615",
+  appId: "1:1002499100615:web:fa069898d1528eacf893e2"
 };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 ```
 
 #### Realtime Database URL

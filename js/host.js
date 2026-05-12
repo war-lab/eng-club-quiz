@@ -26,6 +26,26 @@ window.addEventListener("DOMContentLoaded", async () => {
   bindEvents();
 });
 
+// ----- 参加用QRコード描画 -----
+// 同じURLでも再描画できるよう、毎回コンテナをクリアしてから生成する
+function renderJoinQr(url) {
+  const el = $("qr-code");
+  if (!el) return;
+  el.innerHTML = "";
+  if (typeof QRCode === "undefined") {
+    el.textContent = "QRライブラリが読み込めません";
+    return;
+  }
+  new QRCode(el, {
+    text: url,
+    width: 180,
+    height: 180,
+    colorDark: "#111827",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.M
+  });
+}
+
 // ----- 問題セット一覧の読み込み -----
 // questions/index.json に { sets: [ {file, name}, ... ] } の形式で並べる
 async function loadQuizSetList() {
@@ -98,7 +118,9 @@ async function onCreateRoom() {
 
   // 画面遷移
   $("pin-value").textContent = currentPin;
-  $("join-url-hint").textContent = location.origin + location.pathname.replace(/host\.html$/, "") + "join.html";
+  const joinUrl = location.origin + location.pathname.replace(/host\.html$/, "") + "join.html";
+  $("join-url-hint").textContent = joinUrl;
+  renderJoinQr(joinUrl);
   showPhase("phase-waiting");
 
   // 参加者の入室を監視
@@ -232,7 +254,7 @@ async function revealAnswer(manual) {
     const bar = document.createElement("div");
     bar.className = "dist-bar";
     bar.innerHTML =
-      '<div class="dist-label">' + ["①", "②", "③", "④"][i] + " (" + counts[i] + ")</div>' +
+      '<div class="dist-label">' + ["①", "②", "③", "④"][i] + ' (' + counts[i] + ')</div>' +
       '<div class="dist-fill ' + (i === q.correct ? "correct-fill" : "") + '" ' +
       'style="height: ' + Math.max(8, pct) + '%;">' + pct + '%</div>';
     distEl.appendChild(bar);

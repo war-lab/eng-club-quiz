@@ -135,7 +135,7 @@
   │
   ├── players/
   │   └── {playerId}/
-  │       ├── nickname: "Akai"
+  │       ├── nickname: "Taro"
   │       ├── joinedAt: <unix timestamp>
   │       └── score: 0
   │

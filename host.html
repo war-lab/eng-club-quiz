@@ -32,9 +32,15 @@
   <section id="phase-waiting" class="phase hidden">
     <h1>参加者待機中</h1>
     <div class="pin-display">
-      <div class="pin-label">PIN</div>
-      <div id="pin-value" class="pin-value">------</div>
-      <div class="pin-hint">参加者は <span id="join-url-hint">join.html</span> を開いて、この PIN とニックネームを入力</div>
+      <div class="pin-display-main">
+        <div class="pin-label">PIN</div>
+        <div id="pin-value" class="pin-value">------</div>
+        <div class="pin-hint">参加者は <span id="join-url-hint">join.html</span> を開いて、この PIN とニックネームを入力</div>
+      </div>
+      <div class="qr-area">
+        <div id="qr-code"></div>
+        <div class="qr-hint">スマホで読み取って参加URLを開く</div>
+      </div>
     </div>
 
     <h2>入室済み（<span id="player-count">0</span>名）</h2>
@@ -86,6 +92,8 @@
   <!-- Firebase SDK (compat) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <!-- QRコード生成ライブラリ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="js/firebase-config.js"></script>
   <script src="js/common.js"></script>
   <script src="js/host.js"></script>
