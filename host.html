@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ホスト画面 - eng-club-quiz</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="host">
+
+  <!-- [1] 起動：問題セット選択 -->
+  <section id="phase-setup" class="phase">
+    <h1>クイズの準備</h1>
+    <div class="form-row">
+      <label for="quiz-set-select">問題セット</label>
+      <select id="quiz-set-select"></select>
+    </div>
+    <div class="form-row">
+      <label>得点モード</label>
+      <div class="radio-group">
+        <label><input type="radio" name="score-mode" value="speed" checked> 速度ボーナスあり（Kahoot式）</label>
+        <label><input type="radio" name="score-mode" value="flat"> 速度ボーナスなし（正解者全員 1000 点）</label>
+      </div>
+    </div>
+    <div class="form-row">
+      <button id="btn-create-room" class="primary big">ルームを作成する</button>
+    </div>
+    <p id="setup-error" class="error"></p>
+  </section>
+
+  <!-- [3] 参加者待機 -->
+  <section id="phase-waiting" class="phase hidden">
+    <h1>参加者待機中</h1>
+    <div class="pin-display">
+      <div class="pin-label">PIN</div>
+      <div id="pin-value" class="pin-value">------</div>
+      <div class="pin-hint">参加者は <span id="join-url-hint">join.html</span> を開いて、この PIN とニックネームを入力</div>
+    </div>
+
+    <h2>入室済み（<span id="player-count">0</span>名）</h2>
+    <ul id="player-list" class="player-list"></ul>
+
+    <div class="actions">
+      <button id="btn-start-quiz" class="primary big" disabled>クイズ開始</button>
+    </div>
+  </section>
+
+  <!-- [4][5] 出題・締切 -->
+  <section id="phase-question" class="phase hidden">
+    <div class="qheader">
+      <div class="qindex">Q<span id="q-index">1</span> / <span id="q-total">?</span></div>
+      <div class="qtimer">残り <span id="q-timer">--</span> 秒</div>
+    </div>
+
+    <div id="q-text" class="qtext"></div>
+
+    <div id="q-choices" class="qchoices"></div>
+
+    <div id="q-stats" class="qstats hidden">
+      <h3>回答分布</h3>
+      <div id="q-distribution" class="distribution"></div>
+      <div class="explanation-box">
+        <div class="explanation-label">解説</div>
+        <div id="q-explanation"></div>
+      </div>
+      <h3>現在の上位 5 名</h3>
+      <ol id="q-top5" class="ranking"></ol>
+    </div>
+
+    <div class="actions">
+      <button id="btn-reveal" class="primary">回答締切・正解発表</button>
+      <button id="btn-next" class="primary hidden">次の問題</button>
+    </div>
+  </section>
+
+  <!-- [6] 全問終了 -->
+  <section id="phase-finished" class="phase hidden">
+    <h1>クイズ終了</h1>
+    <h2>最終ランキング（上位 10 名）</h2>
+    <ol id="final-ranking" class="ranking final"></ol>
+    <div class="actions">
+      <button id="btn-close-room" class="danger">ルームを閉じる</button>
+    </div>
+  </section>
+
+  <!-- Firebase SDK (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/host.js"></script>
+</body>
+</html>

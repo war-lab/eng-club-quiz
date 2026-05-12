@@ -1,0 +1,111 @@
+{
+  "name": "前置詞 v1（of, by）",
+  "description": "of と by の用法を判定する 4 択クイズ",
+  "defaultTimeLimitSec": 20,
+  "questions": [
+    {
+      "id": "of-01",
+      "text": "He is a member of the club.\nこの of の用法は？",
+      "choices": [
+        "①BのA（所属からの分離）",
+        "②Bについて",
+        "③Bで出来ている",
+        "④Bから（分離）"
+      ],
+      "correct": 0,
+      "timeLimitSec": 20,
+      "explanation": "クラブというメンバーの集合の中から「彼」を取り出している。"
+    },
+    {
+      "id": "of-02",
+      "text": "He robbed me of money.\nこの of の用法は？",
+      "choices": [
+        "①BのA（所属からの分離）",
+        "②Bについて",
+        "③Bで出来ている",
+        "④Bから（分離）"
+      ],
+      "correct": 3,
+      "timeLimitSec": 20,
+      "explanation": "「お金」と「私」を分離させる動作。rob, deprive, strip などはこの用法。"
+    },
+    {
+      "id": "of-03",
+      "text": "The table is made of wood.\nこの of の用法は？",
+      "choices": [
+        "①BのA（所属からの分離）",
+        "②Bについて",
+        "③Bで出来ている",
+        "④Bから（分離）"
+      ],
+      "correct": 2,
+      "timeLimitSec": 20,
+      "explanation": "材料が原形を保っているとき be made of B。化学変化があるときは be made from B。"
+    },
+    {
+      "id": "of-04",
+      "text": "I have heard of the rumor.\nこの of の用法は？",
+      "choices": [
+        "①BのA（所属からの分離）",
+        "②Bについて",
+        "③Bで出来ている",
+        "④Bから（分離）"
+      ],
+      "correct": 1,
+      "timeLimitSec": 20,
+      "explanation": "hear of / think of / speak of などは「Bについて」の用法。"
+    },
+    {
+      "id": "by-01",
+      "text": "The book was written by Soseki.\nこの by の用法は？",
+      "choices": [
+        "①〜によって（行為者）",
+        "②〜のそばに（位置）",
+        "③〜までに（期限）",
+        "④〜の差で（程度）"
+      ],
+      "correct": 0,
+      "timeLimitSec": 20,
+      "explanation": "受動態の動作主を示す by。最も基本的な用法。"
+    },
+    {
+      "id": "by-02",
+      "text": "There is a bench by the river.\nこの by の用法は？",
+      "choices": [
+        "①〜によって（行為者）",
+        "②〜のそばに（位置）",
+        "③〜までに（期限）",
+        "④〜の差で（程度）"
+      ],
+      "correct": 1,
+      "timeLimitSec": 20,
+      "explanation": "near よりも「すぐそば」感が強い。物理的な近接を表す by。"
+    },
+    {
+      "id": "by-03",
+      "text": "Finish the report by Friday.\nこの by の用法は？",
+      "choices": [
+        "①〜によって（行為者）",
+        "②〜のそばに（位置）",
+        "③〜までに（期限）",
+        "④〜の差で（程度）"
+      ],
+      "correct": 2,
+      "timeLimitSec": 20,
+      "explanation": "「期限」を示す by。till / until は「ずっと〜まで継続」なので使い分けに注意。"
+    },
+    {
+      "id": "by-04",
+      "text": "He is taller than me by 5 cm.\nこの by の用法は？",
+      "choices": [
+        "①〜によって（行為者）",
+        "②〜のそばに（位置）",
+        "③〜までに（期限）",
+        "④〜の差で（程度）"
+      ],
+      "correct": 3,
+      "timeLimitSec": 20,
+      "explanation": "差・程度を示す by。比較表現でよく使われる。"
+    }
+  ]
+}

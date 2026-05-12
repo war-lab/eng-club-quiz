@@ -1,0 +1,23 @@
+{
+  "rules": {
+    "rooms": {
+      "$pin": {
+        ".read": true,
+        "meta": { ".write": true },
+        "currentQuestion": { ".write": true },
+        "players": {
+          "$playerId": {
+            ".write": "newData.child('nickname').isString()"
+          }
+        },
+        "answers": {
+          "$qIdx": {
+            "$playerId": {
+              ".write": "!data.exists()"
+            }
+          }
+        }
+      }
+    }
+  }
+}
