@@ -113,8 +113,13 @@ button.danger:hover { background: #b91c1c; }
   border-radius: 12px;
   padding: 30px;
   margin: 20px 0;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
 }
+.pin-display-main { text-align: center; flex: 1 1 280px; min-width: 240px; }
 .pin-label { font-size: 18px; color: #9ca3af; }
 .pin-value {
   font-size: 72px;
@@ -123,7 +128,18 @@ button.danger:hover { background: #b91c1c; }
   color: #60a5fa;
   font-family: "Consolas", "Menlo", monospace;
 }
-.pin-hint { color: #9ca3af; font-size: 14px; }
+.pin-hint { color: #9ca3af; font-size: 14px; word-break: break-all; }
+.qr-area { text-align: center; }
+.qr-area #qr-code {
+  display: inline-block;
+  padding: 8px;
+  background: #ffffff;
+  border-radius: 8px;
+  line-height: 0;
+}
+.qr-area #qr-code img,
+.qr-area #qr-code canvas { display: block; }
+.qr-hint { color: #9ca3af; font-size: 12px; margin-top: 6px; }
 
 /* ===== 参加者一覧 ===== */
 .player-list {
